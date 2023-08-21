@@ -1,42 +1,40 @@
 #include <iostream>
 
+//just some macros since I am lazy and didn't want to write these lines multiple times
 #define print(x) std::cout << x << std::endl;
+#define getInput(x) std::cin >> x;
+#define clearConsole std::cout << "\033c";
 
-void recursive(uint64_t n)
+//This is the fast and simple function to calculate the factorial
+uint64_t factorial_Calculator(uint64_t n)
+{
+	if (n <= 1)
+	{
+		return 1;
+	}
+	
+	return n * factorial_Calculator(n - 1);
+}
+
+//This also calculates the factorial, but it also prints all the steps in the calculation
+void factorial_CalculatorPrinter(uint64_t n)
 {
 	static uint64_t tempNumb = 1;
 
 	if (n <= 1)
 	{
 		print("Done!")
+		tempNumb = 1;
 		return;
 	}
 	tempNumb *= n;
 
 	print(tempNumb)
 
-	recursive(n - 1);
+	factorial_CalculatorPrinter(n - 1);
 }
 
-void recursive_ptr(uint64_t &n)
-{
-	static uint64_t tempNumb = n;
-
-	tempNumb -= 1;
-
-	print(n)
-
-	if (tempNumb <= 1)
-	{
-		print("Done!")
-		return;
-	}
-
-	n *= tempNumb;
-
-	recursive_ptr(n);
-}
-
+//calculates the fibonacci sequence and prints out the steps
 void fibby(uint64_t n)
 {
 	static uint64_t n_1 = 0;
@@ -44,6 +42,8 @@ void fibby(uint64_t n)
 
 	if (n < 1)
 	{
+		n_1 = 0;
+		n_2 = 0;
 		print("Done!")
 		return;
 	}
@@ -69,36 +69,66 @@ int main()
 {
 	int choice;
 
-	std::cout << "1 = recursive" << std::endl << "2 = fibby" << std::endl;
-	std::cin >> choice;
+	print("Choose what you want to see!")
+	print("1 = Recursive factorial calculator")
+	print("2 = Recursive factorial calculator with the steps")
+	print("3 = Fibonacci sequence")
+	getInput(choice)
 
-	std::cout << "\033c";
+	clearConsole
 
 	if (choice == 1)
 	{
 		print("Give me a number!")
 		uint64_t number;
 
-		std::cin >> number;
+		getInput(number)
+		clearConsole
 
-		recursive_ptr(number);
+		print("Here is the result!")
+		print(factorial_Calculator(number))
 	}
 	else if (choice == 2)
 	{
 		print("Give me a number!")
 		uint64_t number;
 
-		std::cin >> number;
+		getInput(number)
+		clearConsole
 
+		print("Here is the result!")
+		factorial_CalculatorPrinter(number);
+	}
+	else if (choice == 3)
+	{
+		print("Give me a number!")
+		uint64_t number;
+
+		getInput(number)
+		clearConsole
+
+		print("Here is the result!")
 		fibby(number);
-		
 	}
 	else
 	{
-		print("invalid input!")
-		print("choose again!")
-		return main();
+		print("Invalid Input :(!")
+		return 0;
 	}
 
-	return 1;
+	char restartChoice;
+	print("Do you want to go back to the start? Y/N")
+	getInput(restartChoice)
+
+	if (restartChoice == 'Y' || restartChoice == 'y')
+	{
+		clearConsole
+		return main();
+	}
+	else if (restartChoice == 'N' || restartChoice == 'n')
+	{
+		return 1;
+	}
+
+	return 0;
 }
